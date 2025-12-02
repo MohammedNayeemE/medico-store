@@ -1,0 +1,274 @@
+<body class="relative min-h-screen flex items-center justify-center p-4">
+    <div class="absolute inset-0">
+    <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="grad1" cx="20%" cy="20%">
+          <stop offset="0%" style="stop-color: #10b981; stop-opacity: 1" />
+          <stop offset="100%" style="stop-color: #34d399; stop-opacity: 0.8" />
+        </radialGradient>
+        <radialGradient id="grad2" cx="80%" cy="30%">
+          <stop offset="0%" style="stop-color: #6ee7b7; stop-opacity: 1" />
+          <stop offset="100%" style="stop-color: #a7f3d0; stop-opacity: 0.7" />
+        </radialGradient>
+        <radialGradient id="grad3" cx="50%" cy="80%">
+          <stop offset="0%" style="stop-color: #34d399; stop-opacity: 1" />
+          <stop offset="100%" style="stop-color: #10b981; stop-opacity: 0.9" />
+        </radialGradient>
+        <radialGradient id="grad4" cx="10%" cy="70%">
+          <stop offset="0%" style="stop-color: #86efac; stop-opacity: 0.9" />
+          <stop offset="100%" style="stop-color: #6ee7b7; stop-opacity: 0.6" />
+        </radialGradient>
+        <radialGradient id="grad5" cx="90%" cy="85%">
+          <stop offset="0%" style="stop-color: #d1fae5; stop-opacity: 0.8" />
+          <stop offset="100%" style="stop-color: #a7f3d0; stop-opacity: 0.5" />
+        </radialGradient>
+      </defs>
+      
+      <!-- Base gradient -->
+      <rect width="100%" height="100%" fill="url(#grad1)" />
+      
+      <!-- Mesh layers -->
+      <circle cx="20%" cy="20%" r="40%" fill="url(#grad1)" opacity="0.7">
+        <animate attributeName="cx" values="20%;25%;20%" dur="8s" repeatCount="indefinite" />
+        <animate attributeName="cy" values="20%;15%;20%" dur="10s" repeatCount="indefinite" />
+      </circle>
+      
+      <circle cx="80%" cy="30%" r="45%" fill="url(#grad2)" opacity="0.6">
+        <animate attributeName="cx" values="80%;75%;80%" dur="12s" repeatCount="indefinite" />
+        <animate attributeName="cy" values="30%;35%;30%" dur="9s" repeatCount="indefinite" />
+      </circle>
+      
+      <circle cx="50%" cy="80%" r="50%" fill="url(#grad3)" opacity="0.5">
+        <animate attributeName="cx" values="50%;55%;50%" dur="11s" repeatCount="indefinite" />
+        <animate attributeName="cy" values="80%;75%;80%" dur="13s" repeatCount="indefinite" />
+      </circle>
+      
+      <circle cx="10%" cy="70%" r="35%" fill="url(#grad4)" opacity="0.6">
+        <animate attributeName="cx" values="10%;15%;10%" dur="9s" repeatCount="indefinite" />
+        <animate attributeName="cy" values="70%;65%;70%" dur="14s" repeatCount="indefinite" />
+      </circle>
+      
+      <circle cx="90%" cy="85%" r="38%" fill="url(#grad5)" opacity="0.4">
+        <animate attributeName="cx" values="90%;85%;90%" dur="10s" repeatCount="indefinite" />
+        <animate attributeName="cy" values="85%;80%;85%" dur="11s" repeatCount="indefinite" />
+      </circle>
+      
+      <!-- Additional mesh detail -->
+      <ellipse cx="60%" cy="40%" rx="25%" ry="30%" fill="url(#grad2)" opacity="0.3">
+        <animate attributeName="rx" values="25%;28%;25%" dur="7s" repeatCount="indefinite" />
+      </ellipse>
+      
+      <ellipse cx="30%" cy="50%" rx="30%" ry="25%" fill="url(#grad4)" opacity="0.35">
+        <animate attributeName="ry" values="25%;22%;25%" dur="8s" repeatCount="indefinite" />
+      </ellipse>
+    </svg>
+    </div>
+  
+    <div class="relative z-10 bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-5xl min-h-[600px] animate-slide-up">
+
+    <!-- Left Side -->
+    <div class="flex-1 relative bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center overflow-hidden min-h-[250px] md:min-h-auto">
+      <div class="absolute inset-0 bg-cover bg-center opacity-80" 
+        style="background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=2070&q=80');">
+      </div>
+      <div class="relative z-10 text-center text-white p-6 sm:p-8 md:p-10">
+        <div class="mb-6">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+            <i class="fa-solid fa-prescription-bottle-medical text-3xl sm:text-4xl"></i>
+          </div>
+        </div>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Your Health, Our Priority</h2>
+        <p class="text-base sm:text-lg md:text-xl opacity-90 drop-shadow leading-relaxed">
+          Access quality medicines and healthcare products delivered to your doorstep. Your trusted pharmacy partner.
+        </p>
+        <div class="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 text-xs sm:text-sm opacity-90">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-headset"></i>
+            <span>24/7 Support</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span>Fast Delivery</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-certificate"></i>
+            <span>Genuine Products</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="flex-1 p-6 sm:p-8 flex flex-col justify-center max-w-md mx-auto w-full">
+      <!-- Logo -->
+      <div class="text-center mb-6 sm:mb-8 flex flex-row justify-center">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-500 rounded-xl flex items-center justify-center">
+          <i class="fa-solid fa-prescription-bottle-medical text-xl sm:text-2xl text-white"></i>
+        </div>
+      </div>
+
+      <!-- Form Header -->
+      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 text-center mb-2">LOGIN</h2>
+      <p class="text-gray-500 text-center mb-6 sm:mb-8 text-xs sm:text-sm">Enter phone number for OTP verification</p>
+
+      <!-- Phone Form -->
+      <form *ngIf="!showOtpForm()" [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()" class="space-y-4 sm:space-y-5 md:space-y-6">
+        <div class="form-group animate-fade-in-up">
+          <label for="phoneNumber" class="block text-emerald-600 text-xs sm:text-sm font-medium mb-2">Phone Number</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+              <i class="fa-solid fa-phone text-gray-400"></i>
+            </div>
+            <input 
+              id="phoneNumber" 
+              type="tel" 
+              formControlName="phoneNumber"
+              class="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 border-2 border-emerald-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all duration-200 bg-gray-50 text-sm sm:text-base hover:border-emerald-300"
+              [class.border-red-500]="isPhoneNumberTouched() && loginForm.get('phoneNumber')?.invalid"
+              [class.focus:border-red-500]="isPhoneNumberTouched() && loginForm.get('phoneNumber')?.invalid"
+              placeholder="Enter your 10 digit phone number" 
+              maxlength="13">
+          </div>
+          <p *ngIf="isPhoneNumberTouched() && phoneNumberError" class="text-red-500 text-xs mt-1">{{ phoneNumberError }}</p>
+        </div>
+
+        <button 
+          type="submit"
+          [disabled]="isLoading()"
+          class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold py-2 sm:py-3 md:py-4 rounded-xl transition-all duration-200 text-sm sm:text-base md:text-lg hover:disabled:translate-y-0 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus:ring-4 focus:ring-emerald-200">
+          <span *ngIf="!isLoading()">Continue</span>
+          <span *ngIf="isLoading()">
+            <i class="fa-solid fa-spinner animate-spin mr-2"></i>Sending OTP...
+          </span>
+        </button>
+      </form>
+
+      <!-- OTP Form -->
+      <form *ngIf="showOtpForm()" [formGroup]="otpForm" (ngSubmit)="onSubmitOtp()" class="space-y-4 sm:space-y-5 md:space-y-6">
+        <div class="form-group">
+          <label for="otp" class="block text-emerald-600 text-xs sm:text-sm font-medium mb-2">Enter OTP</label>
+          <p class="text-gray-500 text-xs sm:text-sm mb-3">We've sent a 6-digit OTP to {{ loginForm.get('phoneNumber')?.value }}</p>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+              <i class="fa-solid fa-key text-gray-400"></i>
+            </div>
+            <input 
+              id="otp" 
+              type="text" 
+              formControlName="otp"
+              class="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 border-2 border-emerald-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 transition-all duration-200 bg-gray-50 text-sm sm:text-base hover:border-emerald-300"
+              [class.border-red-500]="isOtpTouched() && otpForm.get('otp')?.invalid"
+              [class.focus:border-red-500]="isOtpTouched() && otpForm.get('otp')?.invalid"
+              placeholder="Enter 6-digit OTP" 
+              maxlength="6"
+              inputmode="numeric">
+          </div>
+          <p *ngIf="isOtpTouched() && otpError" class="text-red-500 text-xs mt-1">{{ otpError }}</p>
+        </div>
+
+        <button 
+          type="submit"
+          [disabled]="isLoading()"
+          class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold py-2 sm:py-3 md:py-4 rounded-xl transition-all duration-200 text-sm sm:text-base md:text-lg hover:disabled:translate-y-0 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus:ring-4 focus:ring-emerald-200">
+          <span *ngIf="!isLoading()">Verify OTP</span>
+          <span *ngIf="isLoading()">
+            <i class="fa-solid fa-spinner animate-spin mr-2"></i>Verifying...
+          </span>
+        </button>
+
+        <button 
+          type="button"
+          (click)="onBackToPhoneForm()"
+          class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 sm:py-3 md:py-4 rounded-xl transition-all duration-200 text-sm sm:text-base md:text-lg">
+          Back
+        </button>
+      </form>
+
+      <!-- Extra Info -->
+      <div class="mt-6 text-center">
+        <p class="text-xs sm:text-sm text-gray-500 mb-4">
+          By continuing, you agree to our 
+          <button (click)="openTermsModal()" class="text-emerald-600 hover:underline">Terms of Service</button> 
+          and 
+          <button (click)="openPrivacyModal()" class="text-emerald-600 hover:underline">Privacy Policy</button>
+        </p>
+
+        <!-- Features -->
+        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100">
+          <div class="text-center">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-1">
+              <i class="fa-solid fa-shield-halved text-emerald-600 text-sm sm:text-md"></i>
+            </div>
+            <span class="text-xs sm:text-sm md:text-md text-gray-600">Verified</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-1">
+              <i class="fa-solid fa-file-prescription text-emerald-600 text-sm sm:text-md"></i>
+            </div>
+            <span class="text-xs sm:text-sm md:text-md text-gray-600">Prescriptions</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-1">
+              <i class="fa-regular fa-clock text-emerald-600 text-sm sm:text-md"></i>
+            </div>
+            <span class="text-xs sm:text-sm md:text-md text-gray-600">24/7 Care</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms & Services Modal -->
+  <div 
+    *ngIf="showTermsModal()" 
+    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div class="bg-white w-11/12 max-w-lg p-6 rounded-xl shadow-lg relative overflow-y-auto max-h-[80vh]">
+      <button 
+        (click)="closeTermsModal()" 
+        class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl">
+        &times;
+      </button>
+      <h2 class="text-2xl font-bold mb-4">Terms & Services</h2>
+      <p class="text-gray-700 mb-4">
+        Welcome to Medico E-Pharmacy. By accessing or using our services, you agree to comply with the following terms and conditions:
+      </p>
+      <ul class="list-disc list-inside text-gray-700 mb-4">
+        <li>All prescriptions submitted must be valid and legally issued by a licensed healthcare professional.</li>
+        <li>Our services are intended for personal use only and not for commercial resale.</li>
+        <li>We reserve the right to cancel or refuse any order at our discretion.</li>
+        <li>Users are responsible for maintaining the confidentiality of their accounts and passwords.</li>
+        <li>Prices, availability, and promotions are subject to change without notice.</li>
+      </ul>
+      <p class="text-gray-700">
+        By continuing to use our platform, you acknowledge that you have read, understood, and agreed to these terms.
+      </p>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div 
+    *ngIf="showPrivacyModal()" 
+    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div class="bg-white w-11/12 max-w-lg p-6 rounded-xl shadow-lg relative overflow-y-auto max-h-[80vh]">
+      <button 
+        (click)="closePrivacyModal()" 
+        class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl">
+        &times;
+      </button>
+      <h2 class="text-2xl font-bold mb-4">Privacy Policy</h2>
+      <p class="text-gray-700 mb-4">
+        At Medico E-Pharmacy, your privacy is important to us. This policy explains how we collect, use, and protect your personal information:
+      </p>
+      <ul class="list-disc list-inside text-gray-700 mb-4">
+        <li>We collect information you provide when placing orders, creating an account, or contacting support.</li>
+        <li>Your personal data will only be used to process orders, provide customer service, and improve our services.</li>
+        <li>We do not sell, trade, or rent your personal information to third parties.</li>
+        <li>We may use cookies to enhance your browsing experience and analyze website traffic.</li>
+        <li>All data is stored securely and protected against unauthorized access.</li>
+      </ul>
+      <p class="text-gray-700">
+        By using our website, you consent to the collection and use of your information as described in this policy.
+      </p>
+    </div>
+  </div>
+</body>

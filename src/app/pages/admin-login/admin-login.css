@@ -1,0 +1,32 @@
+/* You can copy styles from login.css and adjust as needed for admin-login */
+.bg-custom-green {
+  background-color: #16a34a;
+}
+.text-custom-green {
+  color: #16a34a;
+}
+.border-custom-light-green {
+  border-color: #bbf7d0;
+}
+.focus\:border-custom-green:focus {
+  border-color: #16a34a;
+}
+
+@keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.2;
+    }
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+.loader {
+  border-top-color: #16a34a;
+}

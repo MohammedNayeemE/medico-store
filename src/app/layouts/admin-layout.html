@@ -1,0 +1,29 @@
+<div class="flex relative">
+  <!-- Sidebar -->
+  <app-admin-sidebar 
+    [isOpen]="isSidebarOpen" 
+    (closeSidebar)="closeSidebar()">
+  </app-admin-sidebar>
+
+  <!-- Overlay for mobile -->
+  @if (isSidebarOpen) {
+    <div 
+      id="overlay" 
+      class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+      (click)="closeSidebar()">
+    </div>
+  }
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 overflow-y-auto min-h-screen">
+    <!-- Menu Toggle for Mobile -->
+    <button 
+      (click)="toggleSidebar()"
+      class="md:hidden mb-4 text-gray-700 focus:outline-none">
+      <i class="fas fa-bars text-2xl"></i>
+    </button>
+
+    <!-- Router Outlet for nested routes -->
+    <router-outlet></router-outlet>
+  </main>
+</div>

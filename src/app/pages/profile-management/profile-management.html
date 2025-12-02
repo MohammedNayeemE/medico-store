@@ -1,0 +1,84 @@
+<div class="mb-8 animate-fade-in">
+  <h1 class="text-4xl font-bold text-gray-800">Profile Management</h1>
+  <p class="text-gray-600 mb-6">Here you can change and edit your profile information</p>
+  <hr class="border-t border-gray-300 my-4">
+</div>
+
+<section class="metric-card rounded-2xl shadow-lg p-6 mb-8 animate-slide-up overflow-x-auto">
+  <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="space-y-6">
+    <!-- Full Name -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-medium mb-1">Full Name</label>
+      <input
+        type="text"
+        name="name"
+        [(ngModel)]="profileData.name"
+        required
+        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 bg-white/90 backdrop-blur-sm"
+        placeholder="Enter your full name"
+      />
+    </div>
+
+    <!-- Email -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-medium mb-1">Email</label>
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="profileData.email"
+        readonly
+        class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-100 cursor-not-allowed"
+        placeholder="Enter your email"
+      />
+      <p class="text-sm text-gray-500 mt-1">Email cannot be changed</p>
+    </div>
+
+    <!-- Phone -->
+    <div class="mb-4">
+      <label class="block text-gray-700 font-medium mb-1">Phone</label>
+      <input
+        type="tel"
+        name="phone"
+        [(ngModel)]="profileData.phone"
+        required
+        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 bg-white/90 backdrop-blur-sm"
+        placeholder="Enter your phone number"
+      />
+    </div>
+
+    <!-- Address -->
+    <div class="mb-6">
+      <label class="block text-gray-700 font-medium mb-1">Address</label>
+      <textarea
+        name="address"
+        [(ngModel)]="profileData.address"
+        rows="3"
+        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 bg-white/90 backdrop-blur-sm"
+        placeholder="Enter your address"
+      >{{ profileData.address }}</textarea>
+    </div>
+
+    <!-- Change Password -->
+    <div class="mb-6">
+      <label class="block text-gray-700 font-medium mb-1">Change Password</label>
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="profileData.password"
+        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 bg-white/90 backdrop-blur-sm"
+        placeholder="Enter new password (leave blank to keep current)"
+      />
+      <p class="text-sm text-gray-500 mt-1">Leave blank if you don't want to change your password</p>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="!profileForm.form.valid"
+      class="px-6 py-3 btn-apply rounded-xl text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <i class="fas fa-save mr-2"></i>
+      Update Profile
+    </button>
+  </form>
+</section>

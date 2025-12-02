@@ -1,0 +1,29 @@
+<div class="cart-sidebar" [class.open]="isOpen">
+  <div class="cart-header">
+    <h2>Shopping Cart</h2>
+  <button class="close-btn" (click)="closeSidebarClicked()">&times;</button>
+  </div>
+  <div class="cart-items">
+    <div *ngIf="cartItems().length === 0" class="empty-cart">Your cart is empty.</div>
+    <div *ngFor="let item of cartItems()" class="cart-item">
+      <div class="item-info">
+        <img class="item-img" [src]="item.img" [alt]="item.name" />
+        <div class="item-meta">
+          <span class="item-name">{{ item.name }}</span>
+          <div class="item-controls">
+            <button class="qty-btn" (click)="decreaseQuantity(item.name)">-</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="increaseQuantity(item.name)">+</button>
+            <button class="remove-btn" (click)="removeItem(item.name)">X</button>
+          </div>
+        </div>
+      </div>
+      <div class="item-price">₹{{ item.price * item.quantity }}</div>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="total-label">Total:</div>
+    <div class="total-price">₹{{ totalPrice() }}</div>
+    <button class="checkout-btn">Checkout</button>
+  </div>
+</div>

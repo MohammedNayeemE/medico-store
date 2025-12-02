@@ -1,0 +1,36 @@
+<div *ngIf="isVisible" class="fixed inset-0 bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center z-50">
+  <div class="relative">
+    <!-- Animated pulse circle background -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="w-32 h-32 bg-emerald-100 rounded-full animate-pulse opacity-40"></div>
+    </div>
+    
+    <!-- Main content card -->
+    <div class="relative bg-white rounded-2xl p-10 shadow-xl flex flex-col items-center">
+      <!-- Medical cross loader -->
+      <div class="relative w-16 h-16 mb-6">
+        <!-- Rotating ring -->
+        <div class="absolute inset-0 border-4 border-slate-200 border-t-emerald-500 rounded-full animate-spin"></div>
+        
+        <!-- Static cross icon in center -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="relative w-6 h-6">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-1.5 bg-emerald-500 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Loading text -->
+      <h3 class="text-slate-700 font-medium text-lg mb-2">{{ title }}</h3>
+      <p class="text-slate-500 text-sm">{{ message }}</p>
+      
+      <!-- Animated dots -->
+      <div class="flex gap-1.5 mt-4">
+        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+      </div>
+    </div>
+  </div>
+</div>

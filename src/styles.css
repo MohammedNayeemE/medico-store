@@ -1,0 +1,82 @@
+
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #62DE40;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(98, 222, 64, 1) 33%, rgba(94, 232, 56, 0.94) 65%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(98, 222, 64, 1) 33%, rgba(94, 232, 56, 0.94) 65%);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #62DE40 #5EE838;
+}
+
+/* Modal animation */
+.modal-animation {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.modal-content-animation {
+  transform: translateY(-20px);
+  transition: transform 0.3s ease-in-out;
+}
+
+.modal-animation.show {
+  opacity: 1;
+}
+
+.modal-animation.show .modal-content-animation {
+  transform: translateY(0);
+}
+
+/* Toast animation */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.toast-enter {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.toast-exit {
+  animation: slideOutRight 0.3s ease-out;
+}
