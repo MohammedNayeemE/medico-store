@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewChecked, signal, com
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
-import { ToastService } from '../../services/toast.service';
 
 interface SuggestedMedicine {
   id: string;
@@ -188,8 +187,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
   };
 
   constructor(
-    private cartService: CartService,
-    private toastService: ToastService
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -293,7 +291,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
       newItems.add(medicine.name);
       return newItems;
     });
-    this.toastService.show(`${medicine.name} added to cart!`);
+    // Toast notification is now handled by CartService
   }
 
   isInCart(medicineName: string): boolean {

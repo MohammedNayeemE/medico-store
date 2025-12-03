@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
+import { ProductService, Product } from '../../services/product.service';
 
 @Component({
   selector: 'app-header',
@@ -36,7 +37,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private productService: ProductService
   ) {
     // Initialize signals from services
     this.cartCount = this.cartService.cartCount;
@@ -78,5 +80,26 @@ export class HeaderComponent implements OnInit {
 
   onCategoryClick(category: string): void {
     this.router.navigate(['/shopping'], { queryParams: { category } });
+  }
+
+  // Image search
+  onImageFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.searchByImage(file);
+    // Clear input so selecting same file again works
+    input.value = '';
+  }
+
+  private searchByImage(file: File): void {
+    // Simple demo: match by file name keywords; replace with backend API later
+    this.productService.searchProductsByImage(file).subscribe((results: Product[]) => {
+      // Navigate to shopping with a query param containing a pseudo keyword for now
+      const keyword = file.name.split('.')[0];
+      this.router.navigate(['/shopping'], { queryParams: { q: keyword, via: 'image' } });
+      // Optionally, we could use a shared state to pass results
+      console.log('Image search results', results);
+    });
   }
 }

@@ -42,14 +42,14 @@ export class ProfileManagementComponent implements OnInit {
   onSubmit(): void {
     // Validate form
     if (!this.profileData.name || !this.profileData.phone) {
-      this.toastService.show('Please fill in all required fields', 3000);
+      this.toastService.warning('Please fill in all required fields', 3000);
       return;
     }
 
     // TODO: Implement API call to update profile
     console.log('Profile data to update:', this.profileData);
     
-    this.toastService.show('Profile updated successfully!', 3000);
+    this.toastService.success('Profile updated successfully!', 3000);
     
     // Clear password field after submit
     this.profileData.password = '';

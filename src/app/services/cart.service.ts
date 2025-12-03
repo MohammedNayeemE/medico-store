@@ -1,4 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { ToastService } from './toast.service';
 
 export interface CartItem {
   name: string;
@@ -26,7 +27,7 @@ export class CartService {
     this.cartSignal().reduce((acc, item) => acc + (item.price * item.quantity), 0)
   );
 
-  constructor() {}
+  constructor(private toastService: ToastService) {}
 
   private loadCart(): CartItem[] {
     try {
@@ -52,8 +53,10 @@ export class CartService {
     
     if (existing) {
       existing.quantity += 1;
+      this.toastService.success(`${product.name} quantity increased to ${existing.quantity}`);
     } else {
       cart.push({ ...product, quantity: 1 });
+      this.toastService.success(`${product.name} added to cart!`);
     }
     
     this.saveCart(cart);
@@ -84,9 +87,11 @@ export class CartService {
   removeItem(name: string): void {
     const cart = this.cartSignal().filter(i => i.name !== name);
     this.saveCart(cart);
+    this.toastService.info(`${name} removed from cart`);
   }
 
   clearCart(): void {
     this.saveCart([]);
+    this.toastService.info('Cart cleared');
   }
 }

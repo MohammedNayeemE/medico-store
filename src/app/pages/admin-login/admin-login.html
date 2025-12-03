@@ -95,7 +95,7 @@
         <div class="relative">
           <label for="password" class="block text-custom-green text-xs sm:text-sm font-medium mb-2">PASSWORD</label>
           <input id="password"
-                [type]="hidePassword ? 'password' : 'text'"
+                [type]="hidePassword() ? 'password' : 'text'"
                 formControlName="password"
                 [disabled]="!!email?.invalid"
                 class="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-custom-light-green rounded-xl 
@@ -113,6 +113,8 @@
         <div class="text-center">
           <button type="button" (click)="onForgotPassword()" class="text-cyan-400 text-xs sm:text-sm hover:underline bg-transparent border-none cursor-pointer">Forgot Password?</button>
         </div>
+        <!-- reCAPTCHA hint - DISABLED, uncomment when captcha is enabled -->
+        <!-- <p class="text-xs text-gray-500 mt-2">Protected by reCAPTCHA • <a class="underline" href="https://policies.google.com/privacy" target="_blank">Privacy</a> • <a class="underline" href="https://policies.google.com/terms" target="_blank">Terms</a></p> -->
         <!-- Submit -->
         <button type="submit"
             [disabled]="loginForm.invalid"
@@ -125,8 +127,8 @@
 
   <!-- Reusable Loading Screen Component -->
   <app-loading-screen 
-    [isVisible]="isLoading" 
-    [title]="loadingTitle"
-    [message]="loadingMessage">
+    [isVisible]="isLoading()" 
+    [title]="loadingTitle()"
+    [message]="loadingMessage()">
   </app-loading-screen>
 </div>

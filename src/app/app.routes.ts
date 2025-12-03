@@ -16,6 +16,10 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'profile',
+    loadComponent: () => import('./pages/customer-profile/customer-profile').then(m => m.CustomerProfileComponent)
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
@@ -85,30 +89,6 @@ export const routes: Routes = [
       }
     ]
   },
-  // Example: Protected routes that require authentication
-  // {
-  //   path: 'admin',
-  //   canActivate: [RoleGuard],
-  //   data: { roles: ['admin'] },
-  //   children: [
-  //     // Admin routes here
-  //   ]
-  // },
-  // {
-  //   path: 'vendor',
-  //   canActivate: [RoleGuard],
-  //   data: { roles: ['vendor'] },
-  //   children: [
-  //     // Vendor routes here
-  //   ]
-  // },
-  // {
-  //   path: 'profile',
-  //   canActivate: [AuthGuard],
-  //   children: [
-  //     // Protected customer routes here
-  //   ]
-  // },
   {
     path: '**',
     redirectTo: ''

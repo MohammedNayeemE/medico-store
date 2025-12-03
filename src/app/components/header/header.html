@@ -19,13 +19,19 @@
       </div>
     </div>
 
-    <!-- Search Bar -->
-    <div class="flex items-center w-full md:w-1/2">
+    <!-- Search Bar with Image Search -->
+    <div class="flex items-center w-full md:w-1/2 gap-2">
       <input type="text" placeholder="Search..." 
         class="w-full border-t border-l border-b rounded-md px-4 py-3 text-base outline-none">
       <button class="bg-green-600 px-5 py-3 rounded-r text-white text-lg hover:bg-green-700">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
+      <!-- Image Search Trigger -->
+      <label class="flex items-center gap-2 text-green-700 cursor-pointer border border-green-600 rounded-md px-3 py-2 hover:bg-green-50">
+        <i class="fa-solid fa-camera"></i>
+        <span class="text-sm">Search by Image</span>
+        <input type="file" accept="image/*" class="hidden" (change)="onImageFileSelected($event)">
+      </label>
     </div>
 
     <div class="flex items-center gap-6 text-gray-600 text-2xl cursor-pointer">

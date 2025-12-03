@@ -8,7 +8,6 @@ import { FeaturesSectionComponent } from '../../components/features-section/feat
 import { CategoriesSectionComponent } from '../../components/categories-section/categories-section';
 import { ProductCarouselComponent } from '../../components/product-carousal/product-carousal';
 import { FooterComponent } from '../../components/footer/footer';
-import { ToastComponent } from '../../components/toast/toast';
 import { ProductService, Product } from '../../services/product.service';
 
 @Component({
@@ -23,8 +22,7 @@ import { ProductService, Product } from '../../services/product.service';
     FeaturesSectionComponent,
     CategoriesSectionComponent,
     ProductCarouselComponent,
-    FooterComponent,
-    ToastComponent
+    FooterComponent
   ],
   templateUrl: './home.html'
 })

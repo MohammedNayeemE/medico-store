@@ -1,0 +1,18 @@
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #16A34A, #15803D); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #15803D, #14532D); }
+
+/* Effects */
+.glass-effect { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background: rgba(255,255,255,0.9); }
+.hover-lift { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+.hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+
+.form-input { transition: all 0.3s ease; }
+.form-input:focus { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(22,163,74,0.15); }
+
+.progress-bar { background: linear-gradient(90deg, #16A34A 0%, #16A34A var(--progress, 0%), #e5e7eb var(--progress, 0%), #e5e7eb 100%); transition: all 1s ease-in-out; }
+
+.avatar-upload { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px dashed #16A34A; transition: all 0.3s ease; }
+.avatar-upload:hover { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-color: #15803D; }

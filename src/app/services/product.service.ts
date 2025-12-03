@@ -38,4 +38,14 @@ export class ProductService {
   getPopularProducts(): Observable<Product[]> {
     return of(this.popularProducts);
   }
+
+  // Stub image-based search: match products whose name appears in file name
+  searchProductsByImage(file: File): Observable<Product[]> {
+    const name = file.name.toLowerCase();
+    const hits = this.products.filter(p => {
+      const tokens = p.name.toLowerCase().split(/\s|\(|\)|\-/);
+      return tokens.some(t => t && name.includes(t));
+    });
+    return of(hits);
+  }
 }

@@ -5,7 +5,6 @@ import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Product } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-product-carousel',
@@ -23,7 +22,6 @@ export class ProductCarouselComponent implements OnInit, AfterViewInit {
 
   constructor(
     private cartService: CartService,
-    private toastService: ToastService,
     private router: Router
   ) {}
 
@@ -57,7 +55,7 @@ export class ProductCarouselComponent implements OnInit, AfterViewInit {
   onAddToCart(product: Product, event: Event): void {
     event.stopPropagation();
     this.cartService.addToCart(product);
-    this.toastService.show(`${product.name} added to cart`);
+    // Toast notification is now handled by CartService
   }
 
   onViewAll(): void {

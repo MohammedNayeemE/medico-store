@@ -1,0 +1,21 @@
+# robots.txt for Medico Store
+# Last updated: 2025-12-03
+
+User-agent: *
+# Allow everything by default
+Allow: /
+
+# Disallow internal admin pages from being indexed
+Disallow: /admin/
+Disallow: /admin/login
+Disallow: /admin/reset-password
+
+# Prevent indexing of API and assets directories if exposed
+Disallow: /api/
+Disallow: /assets/private/
+
+# Crawl-delay for aggressive bots (optional; many crawlers ignore this)
+# Crawl-delay: 5
+
+# Point to your sitemap (update to your real URL)
+Sitemap: https://www.medicostore.example/sitemap.xml
