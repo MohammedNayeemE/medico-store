@@ -11,13 +11,10 @@ import { AdminLayoutComponent } from './layouts/admin-layout';
 import { ProfileManagementComponent } from './pages/profile-management/profile-management';
 
 export const routes: Routes = [
+  // Public routes - accessible by everyone (guest, customer, admin)
   {
     path: '',
     component: HomeComponent
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./pages/customer-profile/customer-profile').then(m => m.CustomerProfileComponent)
   },
   {
     path: 'login',
@@ -35,12 +32,37 @@ export const routes: Routes = [
     path: 'symptom-checker',
     component: SymptomCheckerPageComponent
   },
-  // Admin routes with layout
+  // Customer-only routes
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/customer-profile/customer-profile').then(m => m.CustomerProfileComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['customer'] }
+  },
+  {
+    path: 'orders',
+    loadComponent: () => import('./pages/customer-orders/customer-orders').then(m => m.CustomerOrdersComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['customer'] }
+  },
+  {
+    path: 'me/dashboard',
+    loadComponent: () => import('./pages/customer-dashboard/customer-dashboard').then(m => m.CustomerDashboardComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['customer'] }
+  },
+  {
+    path: 'help',
+    loadComponent: () => import('./pages/help/help').then(m => m.HelpComponent),
+    canActivate: [RoleGuard],
+    data: { roles: ['customer'] }
+  },
+  // Admin routes with layout - protected by RoleGuard
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    // canActivate: [RoleGuard],
-    // data: { roles: ['admin'] },
+    canActivate: [RoleGuard],
+    data: { roles: ['admin'] },
     children: [
       {
         path: 'profile',

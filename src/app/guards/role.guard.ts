@@ -45,6 +45,10 @@ export class RoleGuard implements CanActivate, CanActivateChild {
     // Check if user is authenticated
     if (!this.authService.isAuthenticated()) {
       console.warn('Access denied: User not authenticated');
+      // Redirect to appropriate login page based on required role
+      if (requiredRoles.includes('admin')) {
+        return this.router.createUrlTree(['/admin/login']);
+      }
       return this.router.createUrlTree(['/login']);
     }
 
@@ -59,9 +63,22 @@ export class RoleGuard implements CanActivate, CanActivateChild {
       return true;
     }
 
+    // User is authenticated but doesn't have the required role
+    const userRoles = this.authService.getUserRoles();
     console.warn(
-      `Access denied: User does not have required roles. Required: ${requiredRoles.join(', ')}, User roles: ${this.authService.getUserRoles().join(', ')}`
+      `Access denied: User does not have required roles. Required: ${requiredRoles.join(', ')}, User roles: ${userRoles.join(', ')}`
     );
-    return this.router.createUrlTree(['/unauthorized']);
+
+    // Redirect based on user's actual role
+    if (userRoles.includes('admin')) {
+      // Admin trying to access customer routes - redirect to admin dashboard
+      return this.router.createUrlTree(['/admin/dashboard']);
+    } else if (userRoles.includes('customer')) {
+      // Customer trying to access admin routes - redirect to home
+      return this.router.createUrlTree(['/']);
+    }
+
+    // Fallback to home for other cases
+    return this.router.createUrlTree(['/']);
   }
 }

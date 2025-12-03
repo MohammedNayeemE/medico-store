@@ -137,6 +137,36 @@ export class AuthService {
     );
   }
 
+  // Customer OTP login - Get OTP
+  getOtp(phoneNumber: string): Observable<any> {
+    return this.http.post(`${this.API_BASE}/get-otp`, { phone_number: phoneNumber });
+  }
+
+  // Customer OTP login - Verify OTP and login
+  customerLogin(phoneNumber: string, otp: string): Observable<any> {
+    return this.http.post(`${this.API_BASE}/login`, { 
+      phone_number: phoneNumber, 
+      otp: otp,
+      role_id: 1 // Customer role ID
+    }, { withCredentials: true }).pipe(
+      tap((res: any) => {
+        // Backend sets HttpOnly cookies for refresh token
+        const user: User = {
+          isAuthenticated: true,
+          roles: ['customer'],
+          user_id: res?.user_id,
+          session_id: res?.session_id,
+        };
+        this.login(user);
+        // Store access token if provided
+        const token: string | null = res?.access_token ?? null;
+        if (token) {
+          this.accessTokenSignal.set(token);
+        }
+      })
+    );
+  }
+
   logout(): void {
     localStorage.removeItem('User');
     this.userSignal.set(null);

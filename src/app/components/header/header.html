@@ -68,8 +68,8 @@
         </span>
       </div>
 
-      <!-- Cart -->
-      <div (click)="onCartClick()" class="relative group">
+      <!-- Cart - Only visible for customers and guests, hidden for admins -->
+      <div *ngIf="isCartAvailable()" (click)="onCartClick()" class="relative group">
         <i class="fa-solid fa-cart-shopping hover:text-gray-800 transition"></i>
         <span *ngIf="(cartCount())! > 0" 
           class="absolute -top-2 -right-3 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -80,8 +80,8 @@
         </span>
       </div>
 
-      <!-- User -->
-      <div *ngIf="isAuthenticated()" class="relative group">
+      <!-- User - Only show for customers -->
+      <div *ngIf="isCustomer()" (click)="toggleProfileSidebar()" class="relative group">
         <i class="fa-solid fa-user hover:text-gray-800 transition"></i>
         <span class="absolute bottom-[-2rem] left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition">
           Profile
@@ -105,4 +105,50 @@
       {{ category }}
     </a>
   </nav>
+
+  <!-- Profile Sidebar Overlay + Panel (Customer Only) -->
+  <section *ngIf="isCustomer()">
+    <div id="profileOverlay" 
+      [class.hidden]="!isProfileSidebarOpen()"
+      (click)="closeProfileSidebar()"
+      class="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+    <div id="profileSidebar"
+      [class.translate-x-full]="!isProfileSidebarOpen()"
+      [class.translate-x-0]="isProfileSidebarOpen()"
+      class="fixed top-0 right-0 w-72 h-full bg-white shadow-lg transform transition-transform duration-300 z-50">
+
+      <!-- Close Button -->
+      <div class="flex justify-between items-center p-4 border-b">
+        <h2 class="text-lg font-bold text-gray-800">Account</h2>
+        <button (click)="closeProfileSidebar()" class="text-gray-600 hover:text-gray-900 text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Sidebar Links -->
+      <ul class="divide-y text-gray-700">
+        <li (click)="navigateToProfile()" class="flex justify-between items-center p-4 hover:bg-gray-100 cursor-pointer">
+          <span><i class="fa-solid fa-user-gear mr-2"></i> Manage Profile</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </li>
+        <li (click)="navigateToOrders()" class="flex justify-between items-center p-4 hover:bg-gray-100 cursor-pointer">
+          <span><i class="fa-solid fa-box-open mr-2"></i> My Orders</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </li>
+        <li (click)="navigateToDashboard()" class="flex justify-between items-center p-4 hover:bg-gray-100 cursor-pointer">
+          <span><i class="fa-solid fa-credit-card mr-2"></i> Dashboard</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </li>
+        <li (click)="navigateToHelp()" class="flex justify-between items-center p-4 hover:bg-gray-100 cursor-pointer">
+          <span><i class="fa-solid fa-circle-question mr-2"></i> Help</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </li>
+        <li (click)="onLogout()" class="flex justify-between items-center p-4 text-red-500 hover:bg-gray-100 cursor-pointer">
+          <span><i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Logout</span>
+        </li>
+      </ul>
+
+    </div>
+  </section>
 </header>

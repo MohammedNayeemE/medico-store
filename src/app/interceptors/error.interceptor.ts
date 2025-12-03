@@ -11,12 +11,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((err: any) => {
       const status = err?.status;
       const message = err?.error?.detail || err?.error?.message || err?.message || 'Unexpected error';
-      // If unauthorized, suggest re-login for admin
-      if (status === 401) {
-        try { toast.show('Your session has expired. Please log in again.'); } catch {}
-      } else {
-        try { toast.show(`Request failed (${status ?? 'unknown'}): ${message}`); } catch {}
+      try {
+        toast.show('Request Failed')
       }
+      catch {}
+      // if (status === 401) {
+      //   try { toast.show('Your session has expired. Please log in again.'); } catch {}
+      // } else {
+      //   try { toast.show(`Request failed (${status ?? 'unknown'}): ${message}`); } catch {}
+      // }
       try {
         // no-op secondary
       } catch {}

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -20,11 +22,14 @@ export class LoginComponent implements OnInit {
   showPrivacyModal = signal(false);
   isLoading = signal(false);
   showOtpForm = signal(false);
+  otpSent = signal(false);
+  resendingOtp = signal(false);
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -87,12 +92,31 @@ export class LoginComponent implements OnInit {
     this.isLoading.set(true);
     const phoneNumber = this.loginForm.get('phoneNumber')?.value;
 
-    // Simulate OTP sending
-    setTimeout(() => {
-      console.log('OTP sent to:', phoneNumber);
-      this.showOtpForm.set(true);
-      this.isLoading.set(false);
-    }, 1000);
+    // Call the get-otp API endpoint
+    this.authService.getOtp(phoneNumber).subscribe({
+      next: (response) => {
+        console.log('OTP sent successfully:', response);
+        this.toastService.success('OTP sent successfully to ' + phoneNumber, 3000);
+        this.showOtpForm.set(true);
+        this.otpSent.set(true);
+        this.isLoading.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error sending OTP:', error);
+        this.isLoading.set(false);
+        
+        // Handle different error scenarios
+        if (error.status === 400) {
+          this.toastService.error('Invalid phone number format', 4000);
+        } else if (error.status === 429) {
+          this.toastService.error('Too many OTP requests. Please try again later', 4000);
+        } else if (error.status === 500) {
+          this.toastService.error('Failed to send OTP. Please try again', 4000);
+        } else {
+          this.toastService.error('An error occurred. Please try again', 4000);
+        }
+      }
+    });
   }
 
   onSubmitOtp(): void {
@@ -105,27 +129,78 @@ export class LoginComponent implements OnInit {
     const otp = this.otpForm.get('otp')?.value;
     const phoneNumber = this.loginForm.get('phoneNumber')?.value;
 
-    // Simulate OTP verification
-    setTimeout(() => {
-      // Mock successful verification - in real app, verify with backend
-      const mockUser: User = {
-        isAuthenticated: true,
-        email: `user${phoneNumber.slice(-10)}@medico.com`,
-        name: 'User',
-        roles: ['customer']
-      };
-
-      this.authService.login(mockUser);
-      this.isLoading.set(false);
-
-      // Navigate to home
-      this.router.navigate(['/']);
-    }, 1000);
+    // Call the login API endpoint with OTP
+    this.authService.customerLogin(phoneNumber, otp).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.toastService.success('Login successful! Welcome to Medico Store', 3000);
+        this.isLoading.set(false);
+        
+        // Navigate to home page after successful login
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 500);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error verifying OTP:', error);
+        this.isLoading.set(false);
+        
+        // Handle different error scenarios
+        if (error.status === 400) {
+          this.toastService.error('Invalid OTP. Please check and try again', 4000);
+        } else if (error.status === 404) {
+          this.toastService.error('OTP expired. Please request a new one', 4000);
+          // Reset to phone form
+          this.onBackToPhoneForm();
+        } else if (error.status === 500) {
+          this.toastService.error('Login failed. Please try again', 4000);
+        } else {
+          this.toastService.error('An error occurred. Please try again', 4000);
+        }
+      }
+    });
   }
 
   onBackToPhoneForm(): void {
     this.showOtpForm.set(false);
+    this.otpSent.set(false);
     this.otpForm.reset();
+  }
+
+  onResendOtp(): void {
+    const phoneNumber = this.loginForm.get('phoneNumber')?.value;
+    
+    if (!phoneNumber) {
+      this.toastService.error('Phone number is required', 3000);
+      return;
+    }
+
+    this.resendingOtp.set(true);
+
+    // Call the get-otp API endpoint again
+    this.authService.getOtp(phoneNumber).subscribe({
+      next: (response) => {
+        console.log('OTP resent successfully:', response);
+        this.toastService.success('OTP resent successfully!', 3000);
+        this.resendingOtp.set(false);
+        this.otpForm.reset(); // Clear the OTP input
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error resending OTP:', error);
+        this.resendingOtp.set(false);
+        
+        // Handle different error scenarios
+        if (error.status === 400) {
+          this.toastService.error('Invalid phone number format', 4000);
+        } else if (error.status === 429) {
+          this.toastService.error('Too many OTP requests. Please try again later', 4000);
+        } else if (error.status === 500) {
+          this.toastService.error('Failed to resend OTP. Please try again', 4000);
+        } else {
+          this.toastService.error('An error occurred. Please try again', 4000);
+        }
+      }
+    });
   }
 
   openTermsModal(): void {

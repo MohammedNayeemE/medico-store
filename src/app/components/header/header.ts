@@ -21,6 +21,9 @@ export class HeaderComponent implements OnInit {
   isAuthenticated: Signal<boolean>;
   deliveryAddress = signal<string>('Select Location');
   
+  // Profile sidebar state
+  isProfileSidebarOpen = signal<boolean>(false);
+  
   categories = [
     'Pain Relief',
     'Cold and Flu',
@@ -47,6 +50,14 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDeliveryAddress();
+  }
+
+  /**
+   * Check if cart functionality should be visible
+   * Cart is hidden for admin users
+   */
+  isCartAvailable(): boolean {
+    return this.cartService.isCartAvailable();
   }
 
   loadDeliveryAddress(): void {
@@ -101,5 +112,68 @@ export class HeaderComponent implements OnInit {
       // Optionally, we could use a shared state to pass results
       console.log('Image search results', results);
     });
+  }
+
+  /**
+   * Check if the current user is a customer
+   * Returns true only if user is authenticated and has customer role
+   */
+  isCustomer(): boolean {
+    return this.authService.hasRole('customer');
+  }
+
+  /**
+   * Toggle profile sidebar open/close
+   */
+  toggleProfileSidebar(): void {
+    this.isProfileSidebarOpen.set(!this.isProfileSidebarOpen());
+  }
+
+  /**
+   * Close profile sidebar
+   */
+  closeProfileSidebar(): void {
+    this.isProfileSidebarOpen.set(false);
+  }
+
+  /**
+   * Navigate to customer profile management page
+   */
+  navigateToProfile(): void {
+    this.closeProfileSidebar();
+    this.router.navigate(['/profile']);
+  }
+
+  /**
+   * Navigate to customer orders page
+   */
+  navigateToOrders(): void {
+    this.closeProfileSidebar();
+    this.router.navigate(['/orders']);
+  }
+
+  /**
+   * Navigate to customer dashboard
+   */
+  navigateToDashboard(): void {
+    this.closeProfileSidebar();
+    this.router.navigate(['/me/dashboard']);
+  }
+
+  /**
+   * Navigate to help page
+   */
+  navigateToHelp(): void {
+    this.closeProfileSidebar();
+    this.router.navigate(['/help']);
+  }
+
+  /**
+   * Logout the current user
+   */
+  onLogout(): void {
+    this.closeProfileSidebar();
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }
