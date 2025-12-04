@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 interface NavItem {
   id: string;
@@ -22,6 +23,12 @@ export class AdminSidebarComponent {
   @Input() isOpen = false;
   @Output() closeSidebar = new EventEmitter<void>();
 
+  isLoggingOut = signal<boolean>(false);
+
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+
   navItems: NavItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: 'fa-tachometer-alt', route: '/admin/dashboard' },
     { id: 'users', label: 'Users', icon: 'fa-users', route: '/admin/users' },
@@ -35,20 +42,35 @@ export class AdminSidebarComponent {
     { id: 'profile', label: 'Settings', icon: 'fa-gear', route: '/admin/profile', active: true }
   ];
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
-
   navigateTo(route: string) {
     this.router.navigate([route]);
     this.closeSidebar.emit();
   }
 
+  /**
+   * Logout the admin user
+   * Calls the backend logout endpoint to revoke tokens and terminate session
+   * Falls back to local logout if API fails to ensure user is logged out locally
+   */
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/admin-login']);
-    this.closeSidebar.emit();
+    this.isLoggingOut.set(true);
+    this.authService.logout().subscribe({
+      next: (response) => {
+        this.toastService.show('Logged out successfully');
+        this.isLoggingOut.set(false);
+        this.router.navigate(['/admin-login']);
+        this.closeSidebar.emit();
+      },
+      error: (err) => {
+        console.error('Logout error:', err);
+        // Even if API call fails, clear local auth state for security
+        this.authService.logoutLocally();
+        this.toastService.show('Logged out successfully');
+        this.isLoggingOut.set(false);
+        this.router.navigate(['/admin-login']);
+        this.closeSidebar.emit();
+      }
+    });
   }
 
   onCloseSidebar() {

@@ -1,11 +1,12 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { catchError, switchMap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, switchMap, finalize } from 'rxjs/operators';
+import { throwError, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-let isRefreshing = false; // 🚫 prevents infinite refresh loops
+let isRefreshing = false;
+const refreshTokenSubject = new Subject<string | null>();
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
@@ -14,7 +15,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   let modifiedReq = req;
 
-  // Attach cookies + token only for backend URLs
   if (isBackend) {
     modifiedReq = modifiedReq.clone({ withCredentials: true });
     if (token) {
@@ -29,12 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
       const status = error?.status;
 
-      // ❌ Do NOT refresh for:
       if (!isBackend || status !== 401) {
-        return throwError(() => error);
-      }
-
-      if (!token) {
         return throwError(() => error);
       }
 
@@ -47,29 +42,47 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       if (isRefreshing) {
-        return throwError(() => error);
+        // Wait for the token refresh to complete, then retry the request
+        return refreshTokenSubject.pipe(
+          switchMap((newToken) => {
+            let retry = modifiedReq;
+            if (newToken) {
+              retry = modifiedReq.clone({
+                setHeaders: { Authorization: `Bearer ${newToken}` }
+              });
+            }
+            return next(retry);
+          }),
+          catchError((err) => throwError(() => err))
+        );
       }
 
       isRefreshing = true;
+      refreshTokenSubject.next(null);
 
       return auth.refreshToken().pipe(
         switchMap(() => {
-          isRefreshing = false;
-
           const newToken = auth.getAccessToken();
+          console.log(newToken)
           let retry = modifiedReq;
           if (newToken) {
             retry = modifiedReq.clone({
               setHeaders: { Authorization: `Bearer ${newToken}` }
             });
           }
-
+          
+          // Notify all pending requests about the new token
+          refreshTokenSubject.next(newToken);
+          
           return next(retry);
         }),
         catchError((refreshErr) => {
           isRefreshing = false;
           auth.logout(); // Cleanup on failed refresh
-          return throwError(() => error);
+          return throwError(() => refreshErr);
+        }),
+        finalize(() => {
+          isRefreshing = false;
         })
       );
     })

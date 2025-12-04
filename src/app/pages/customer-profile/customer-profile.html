@@ -3,7 +3,7 @@
   <nav class="flex mb-6 text-sm" aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1 md:space-x-3">
       <li class="inline-flex items-center">
-        <a routerLink="/" class="inline-flex items-center text-gray-700 hover:text-green-600 transition-colors">
+        <a href="/" class="inline-flex items-center text-gray-700 hover:text-green-600 transition-colors cursor-pointer">
           <i class="fas fa-home mr-2"></i>
           Home
         </a>
@@ -55,7 +55,11 @@
 
   <!-- Personal Tab -->
   <div [class.hidden]="activeTab() !== 'personal'" class="tab-content">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div *ngIf="loadingProfile()" class="text-center py-12">
+      <i class="fas fa-spinner fa-spin text-4xl text-green-600 mb-4"></i>
+      <p class="text-gray-600">Loading your profile...</p>
+    </div>
+    <div *ngIf="!loadingProfile()" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Profile Picture -->
       <div class="lg:col-span-1">
         <div class="bg-white rounded-xl shadow-lg p-6">
@@ -161,7 +165,13 @@
             </div>
 
             <div class="flex justify-end">
-              <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg">Save Changes</button>
+              <button 
+                type="submit" 
+                [disabled]="savingProfile()"
+                class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
+                <i class="fas" [ngClass]="savingProfile() ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+                {{ savingProfile() ? 'Saving...' : 'Save Changes' }}
+              </button>
             </div>
           </form>
         </div>
@@ -191,7 +201,13 @@
             <textarea formControlName="medications" rows="4" class="resize-none form-input w-full px-4 py-3 border rounded-lg" placeholder="List current medications"></textarea>
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg">Save Medical Info</button>
+            <button 
+              type="submit"
+              [disabled]="savingProfile()"
+              class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
+              <i class="fas" [ngClass]="savingProfile() ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+              {{ savingProfile() ? 'Saving...' : 'Save Medical Info' }}
+            </button>
           </div>
         </form>
       </div>
@@ -208,29 +224,57 @@
 
       <!-- Address List -->
       <div class="space-y-4">
-        <div *ngFor="let addr of addresses()" class="p-4 border rounded-lg flex justify-between items-start">
-          <div>
-            <div class="font-semibold capitalize">{{ addr.addressType }}</div>
-            <div class="text-sm text-gray-600">{{ addr.addressFullName }}</div>
-            <div class="text-sm">{{ addr.addressLine1 }} {{ addr.addressLine2 }}</div>
-            <div class="text-sm">{{ addr.addressCity }}, {{ addr.addressState }} - {{ addr.addressZip }}</div>
-            <div class="text-sm text-gray-600">📞 {{ addr.addressPhone }}</div>
+        <div *ngIf="loadingAddresses()" class="text-center py-8">
+          <i class="fas fa-spinner fa-spin text-2xl text-green-600"></i>
+          <p class="text-gray-600 mt-2">Loading addresses...</p>
+        </div>
+        <div *ngIf="!loadingAddresses() && addresses().length === 0" class="text-center py-8">
+          <i class="fas fa-map-marker-alt text-4xl text-gray-300 mb-2"></i>
+          <p class="text-gray-600">No addresses saved yet</p>
+        </div>
+        <div *ngFor="let addr of addresses()" class="p-4 border rounded-lg flex justify-between items-start hover:shadow-md transition-shadow">
+          <div class="flex-1">
+            <div class="font-semibold text-gray-900">{{ addr.house_no || 'Address' }}</div>
+            <div class="text-sm text-gray-600">{{ addr.street_name }}</div>
+            <div class="text-sm">{{ addr.locality }}</div>
+            <div class="text-sm">{{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</div>
+            <div class="text-xs text-gray-500 mt-2" *ngIf="addr.created_at">
+              <i class="fas fa-calendar mr-1"></i>Added on {{ addr.created_at | date:'short' }}
+            </div>
           </div>
-          <button type="button" (click)="removeAddress(addr.id)" class="text-red-600">Remove</button>
+          <button 
+            type="button" 
+            (click)="removeAddress(addr.address_id)" 
+            class="text-red-600 hover:text-red-800 transition-colors">
+            <i class="fas fa-trash mr-1"></i>Remove
+          </button>
         </div>
       </div>
 
-      <button type="button" (click)="toggleAddAddress(true)" class="mt-6 bg-green-600 text-white px-6 py-3 rounded-lg">Add New Address</button>
+      <button 
+        type="button" 
+        (click)="toggleAddAddress(true)" 
+        [disabled]="loadingAddresses() || savingAddress()"
+        class="mt-6 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
+        <i class="fas fa-plus"></i>
+        Add New Address
+      </button>
 
       <!-- Add Address Form -->
       <form id="addAddressForm" [formGroup]="addressForm" class="mt-6 space-y-6 hidden">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <p class="text-sm text-blue-800 flex items-center gap-2">
+            <i class="fas fa-info-circle"></i>
+            <span>The address will be automatically filled based on your location</span>
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Address Type <span class="text-red-500">*</span></label>
             <select formControlName="addressType" class="form-input w-full px-4 py-3 border rounded-lg">
-              <option value="home">Home</option>
-              <option value="work">Work</option>
-              <option value="other">Other</option>
+              <option value="">Select Address Type</option>
+              <option *ngFor="let type of addressTypes()" [value]="type.name">{{ type.name }}</option>
             </select>
           </div>
           <div>
@@ -239,40 +283,19 @@
             <small *ngIf="isInvalid(addressForm, 'addressFullName')" class="text-red-600">Full name is required</small>
           </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Address Line 1 <span class="text-red-500">*</span></label>
-          <input type="text" formControlName="addressLine1" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter address line 1">
-          <small *ngIf="isInvalid(addressForm, 'addressLine1')" class="text-red-600">Address line 1 is required</small>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Address Line 2</label>
-          <input type="text" formControlName="addressLine2" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter address line 2 (optional)">
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">State <span class="text-red-500">*</span></label>
-            <input type="text" formControlName="addressState" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter state">
-            <small *ngIf="isInvalid(addressForm, 'addressState')" class="text-red-600">State is required</small>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">City <span class="text-red-500">*</span></label>
-            <input type="text" formControlName="addressCity" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter city">
-            <small *ngIf="isInvalid(addressForm, 'addressCity')" class="text-red-600">City is required</small>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">ZIP Code <span class="text-red-500">*</span></label>
-            <input type="text" formControlName="addressZip" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter ZIP code">
-            <small *ngIf="isInvalid(addressForm, 'addressZip')" class="text-red-600">ZIP must be 5-6 digits</small>
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
-          <input type="tel" formControlName="addressPhone" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter phone number">
-          <small *ngIf="isInvalid(addressForm, 'addressPhone')" class="text-red-600">Enter a valid phone number</small>
-        </div>
-        <div class="flex justify-end gap-4">
-          <button type="button" (click)="toggleAddAddress(false)" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg">Cancel</button>
-          <button type="button" (click)="saveAddress()" class="bg-green-600 text-white px-6 py-3 rounded-lg">Save Address</button>
+
+        <div class="flex gap-4">
+          <button 
+            type="button" 
+            (click)="useCurrentLocation()" 
+            [disabled]="geolocating() || savingAddress()"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-location-crosshairs"></i>
+            {{ geolocating() ? 'Getting Location...' : 'Use Current Location' }}
+          </button>
+          <button type="button" (click)="toggleAddAddress(false)" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors">
+            Cancel
+          </button>
         </div>
       </form>
     </div>
@@ -286,62 +309,166 @@
         Family Members
       </h3>
 
-      <!-- List -->
-      <div class="space-y-4 mb-6">
-        <div *ngFor="let m of familyMembers()" class="p-4 border rounded-lg flex justify-between items-start">
-          <div>
-            <div class="font-semibold">{{ m.fullName }}</div>
-            <div class="text-sm text-gray-600">Relation: {{ m.relation }}</div>
-            <div class="text-sm">DOB: {{ m.dateOfBirth }}</div>
-            <div class="text-sm">Gender: {{ m.gender }}</div>
-          </div>
-          <button type="button" (click)="removeFamilyMember(m.id)" class="text-red-600">Remove</button>
-        </div>
-        <div *ngIf="familyMembers().length === 0" class="text-sm text-gray-600">No family members added yet.</div>
+      <!-- Loading State -->
+      <div *ngIf="loadingFamilyMembers()" class="text-center py-12">
+        <i class="fas fa-spinner fa-spin text-4xl text-green-600 mb-4"></i>
+        <p class="text-gray-600">Loading family members...</p>
       </div>
 
-      <!-- Add Member Form -->
-  <form [formGroup]="newMemberGroup" class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
-            <input type="text" formControlName="fullName" class="form-input w-full px-4 py-3 border rounded-lg" placeholder="Enter full name">
-            <small *ngIf="isInvalid(newMemberGroup, 'fullName')" class="text-red-600">Full name is required</small>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Relation <span class="text-red-500">*</span></label>
-            <select formControlName="relation" class="form-input w-full px-4 py-3 border rounded-lg">
-              <option value="">Select Relation</option>
-              <option value="spouse">Spouse</option>
-              <option value="parent">Parent</option>
-              <option value="child">Child</option>
-              <option value="sibling">Sibling</option>
-              <option value="other">Other</option>
-            </select>
-            <small *ngIf="isInvalid(newMemberGroup, 'relation')" class="text-red-600">Relation is required</small>
-          </div>
+      <!-- Family Members List -->
+      <div *ngIf="!loadingFamilyMembers()" class="space-y-4 mb-8">
+        <div *ngIf="familyMembers().length === 0" class="text-center py-8">
+          <i class="fas fa-users text-4xl text-gray-300 mb-2"></i>
+          <p class="text-gray-600">No family members added yet.</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth <span class="text-red-500">*</span></label>
-            <input type="date" formControlName="dateOfBirth" class="form-input w-full px-4 py-3 border rounded-lg">
-            <small *ngIf="isInvalid(newMemberGroup, 'dateOfBirth')" class="text-red-600">Date of birth is required</small>
+        <div *ngFor="let member of familyMembers()" class="p-4 border rounded-lg flex justify-between items-start hover:shadow-md transition-shadow">
+          <div class="flex-1">
+            <div class="font-semibold text-gray-900">{{ member.name }}</div>
+            <div class="text-sm text-gray-600">
+              <i class="fas fa-link mr-1"></i>Relation: {{ member.relation | titlecase }}
+            </div>
+            <div class="text-sm" *ngIf="member.dob">
+              <i class="fas fa-birthday-cake mr-1"></i>DOB: {{ member.dob | date:'mediumDate' }}
+            </div>
+            <div class="text-sm" *ngIf="member.gender">
+              <i class="fas fa-venus-mars mr-1"></i>Gender: {{ member.gender === 'M' ? 'Male' : member.gender === 'F' ? 'Female' : member.gender }}
+            </div>
+            <div class="text-sm" *ngIf="member.age">
+              <i class="fas fa-calendar-alt mr-1"></i>Age: {{ member.age }}
+            </div>
+            <div class="text-sm text-gray-500" *ngIf="member.phone_number">
+              <i class="fas fa-phone mr-1"></i>{{ member.phone_number }}
+            </div>
+            <div class="text-xs text-gray-500 mt-2" *ngIf="member.created_at">
+              <i class="fas fa-clock mr-1"></i>Added on {{ member.created_at | date:'short' }}
+            </div>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Gender <span class="text-red-500">*</span></label>
-            <select formControlName="gender" class="form-input w-full px-4 py-3 border rounded-lg">
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-            <small *ngIf="isInvalid(newMemberGroup, 'gender')" class="text-red-600">Gender is required</small>
+          <button 
+            type="button" 
+            (click)="removeFamilyMember(member.member_id)" 
+            class="text-red-600 hover:text-red-800 transition-colors whitespace-nowrap ml-4">
+            <i class="fas fa-trash mr-1"></i>Remove
+          </button>
+        </div>
+      </div>
+
+      <!-- Add Family Member Form -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h4 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <i class="fas fa-plus-circle text-green-600"></i>
+          Add New Family Member
+        </h4>
+        <form [formGroup]="familyForm" (ngSubmit)="addFamilyMember()" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Full Name <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="text" 
+                formControlName="name" 
+                class="form-input w-full px-4 py-3 border rounded-lg" 
+                placeholder="Enter full name">
+              <small *ngIf="isInvalid(familyForm, 'name')" class="text-red-600">Full name is required (min 2 chars)</small>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Relation <span class="text-red-500">*</span>
+              </label>
+              <select formControlName="relation" class="form-input w-full px-4 py-3 border rounded-lg">
+                <option value="">Select Relation</option>
+                <option value="spouse">Spouse</option>
+                <option value="parent">Parent</option>
+                <option value="child">Child</option>
+                <option value="sibling">Sibling</option>
+                <option value="grandparent">Grandparent</option>
+                <option value="aunt">Aunt</option>
+                <option value="uncle">Uncle</option>
+                <option value="cousin">Cousin</option>
+                <option value="other">Other</option>
+              </select>
+              <small *ngIf="isInvalid(familyForm, 'relation')" class="text-red-600">Relation is required</small>
+            </div>
           </div>
-        </div>
-        <div class="flex justify-end">
-          <button type="button" (click)="addFamilyMember()" class="bg-green-600 text-white px-6 py-3 rounded-lg">Add Member</button>
-        </div>
-      </form>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Date of Birth <span class="text-red-500">*</span>
+              </label>
+              <input 
+                type="date" 
+                formControlName="dob" 
+                class="form-input w-full px-4 py-3 border rounded-lg">
+              <small *ngIf="isInvalid(familyForm, 'dob')" class="text-red-600">Date of birth is required</small>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Age (Auto-calculated)
+              </label>
+              <div class="relative">
+                <input 
+                  type="number" 
+                  formControlName="age" 
+                  class="form-input w-full px-4 py-3 border rounded-lg bg-gray-100 cursor-not-allowed" 
+                  [placeholder]="calculatedAge() !== null ? calculatedAge() + ' years' : 'Select DOB first'" 
+                  readonly>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <i class="fas fa-calculator text-green-600"></i>
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Automatically calculated from date of birth</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+              <select formControlName="gender" class="form-input w-full px-4 py-3 border rounded-lg">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+              <input 
+                type="tel" 
+                formControlName="phoneNumber" 
+                class="form-input w-full px-4 py-3 border rounded-lg" 
+                placeholder="Enter phone number">
+              <small *ngIf="isInvalid(familyForm, 'phoneNumber')" class="text-red-600">Enter a valid phone number</small>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input 
+              type="email" 
+              formControlName="email" 
+              class="form-input w-full px-4 py-3 border rounded-lg" 
+              placeholder="Enter email address">
+            <small *ngIf="isInvalid(familyForm, 'email')" class="text-red-600">Enter a valid email</small>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button 
+              type="button" 
+              (click)="familyForm.reset()" 
+              class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-3 rounded-lg transition-colors">
+              Clear
+            </button>
+            <button 
+              type="submit" 
+              [disabled]="savingFamilyMember()"
+              class="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
+              <i class="fas" [ngClass]="savingFamilyMember() ? 'fa-spinner fa-spin' : 'fa-plus'"></i>
+              {{ savingFamilyMember() ? 'Adding...' : 'Add Member' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </main>

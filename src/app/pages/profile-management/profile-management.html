@@ -11,7 +11,7 @@
 
 <section *ngIf="!isLoading()" class="metric-card rounded-2xl shadow-lg p-6 mb-8 animate-slide-up overflow-x-auto">
   <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="space-y-6">
-    
+
     <!-- Profile Picture Section -->
     <div class="mb-6">
       <label class="block text-gray-700 font-medium mb-3">Profile Picture</label>
@@ -19,22 +19,22 @@
         <!-- Current/Preview Image -->
         <div class="relative">
           <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 bg-gray-100">
-            <img 
-              *ngIf="previewUrl || profileData.profile_pic_url" 
-              [src]="previewUrl || profileData.profile_pic_url" 
+            <img
+              *ngIf="previewUrl() || profileData.profile_pic_url"
+              [src]="previewUrl() || profileData.profile_pic_url"
               alt="Profile Picture"
               class="w-full h-full object-cover"
             />
-            <div *ngIf="!previewUrl && !profileData.profile_pic_url" class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-blue-600">
+            <div *ngIf="!previewUrl() && !profileData.profile_pic_url" class="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-blue-600">
               <i class="fas fa-user text-white text-4xl"></i>
             </div>
           </div>
           <!-- Remove button for preview -->
-          <button 
-            *ngIf="previewUrl" 
+          <button
+            *ngIf="previewUrl()"
             type="button"
             (click)="removeSelectedFile()"
-            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+            class="absolute -top-2 -right-2 bg-red-500 text-slate-600 rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
           >
             <i class="fas fa-times"></i>
           </button>
@@ -42,19 +42,19 @@
 
         <!-- Upload Button -->
         <div class="flex-1">
-          <input 
-            type="file" 
+          <input
+            type="file"
             id="profilePicInput"
             accept="image/*"
             (change)="onFileSelected($event)"
             class="hidden"
           />
-          <label 
+          <label
             for="profilePicInput"
             class="inline-block px-6 py-3 bg-gradient-to-r from-accent to-blue-600 text-slate-600 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:scale-105"
           >
             <i class="fas fa-upload mr-2"></i>
-            {{ previewUrl ? 'Change Picture' : 'Upload Picture' }}
+            {{ previewUrl() ? 'Change Picture' : 'Upload Picture' }}
           </label>
           <p class="text-sm text-gray-500 mt-2">
             <i class="fas fa-info-circle mr-1"></i>

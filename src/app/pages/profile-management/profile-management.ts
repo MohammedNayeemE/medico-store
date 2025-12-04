@@ -19,7 +19,7 @@ interface ProfileData {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './profile-management.html',
-  styleUrls: ['./profile-management.css']
+  styleUrls: ['./profile-management.css'],
 })
 export class ProfileManagementComponent implements OnInit {
   private toastService = inject(ToastService);
@@ -29,8 +29,8 @@ export class ProfileManagementComponent implements OnInit {
   // State management
   isLoading = signal(false);
   isSaving = signal(false);
-  selectedFile: File | null = null;
-  previewUrl: string | null = null;
+  selectedFile = signal<File | null>(null);
+  previewUrl = signal<string | null>(null);
 
   profileData: ProfileData = {
     name: '',
@@ -38,7 +38,7 @@ export class ProfileManagementComponent implements OnInit {
     phone: '',
     profile_pic: null,
     profile_pic_url: '',
-    password: ''
+    password: '',
   };
 
   // Helper to get full image URL
@@ -61,7 +61,7 @@ export class ProfileManagementComponent implements OnInit {
 
   loadProfileData(): void {
     this.isLoading.set(true);
-    
+
     // Get email from auth service
     const currentUser = this.authService.user();
     if (currentUser?.email) {
@@ -85,22 +85,22 @@ export class ProfileManagementComponent implements OnInit {
         if (error.status === 404) {
           this.toastService.info('No profile found. Please create your profile.', 3000);
         }
-      }
+      },
     });
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     console.log('File selected event triggered', input.files);
-    
+
     if (input.files && input.files[0]) {
       const file = input.files[0];
       console.log('File details:', {
         name: file.name,
         size: file.size,
-        type: file.type
+        type: file.type,
       });
-      
+
       // Validate file type
       if (!file.type.startsWith('image/')) {
         this.toastService.error('Please select an image file', 3000);
@@ -113,14 +113,14 @@ export class ProfileManagementComponent implements OnInit {
         return;
       }
 
-      this.selectedFile = file;
+      this.selectedFile.set(file);
       console.log('File stored in selectedFile:', this.selectedFile);
 
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.previewUrl = e.target?.result as string;
-        console.log('Preview URL created:', this.previewUrl?.substring(0, 50) + '...');
+        this.previewUrl.set(e.target?.result as string);
+        console.log('Preview URL created:', this.previewUrl()?.substring(0, 50) + '...');
       };
       reader.onerror = (error) => {
         console.error('FileReader error:', error);
@@ -133,8 +133,8 @@ export class ProfileManagementComponent implements OnInit {
   }
 
   removeSelectedFile(): void {
-    this.selectedFile = null;
-    this.previewUrl = null;
+    this.selectedFile.set(null);
+    this.previewUrl.set(null);
     // Reset file input
     const fileInput = document.getElementById('profilePicInput') as HTMLInputElement;
     if (fileInput) {
@@ -155,13 +155,13 @@ export class ProfileManagementComponent implements OnInit {
     const updateData = {
       name: this.profileData.name,
       phone_number: this.profileData.phone,
-      profile_pic: this.profileData.profile_pic
+      profile_pic: this.profileData.profile_pic,
     };
 
     // If there's a file selected, upload it first then update profile
-    if (this.selectedFile) {
+    if (this.selectedFile() != null) {
       console.log('Uploading file with profile data:', updateData);
-      this.adminProfileService.uploadAndUpdateProfile(this.selectedFile, updateData).subscribe({
+      this.adminProfileService.uploadAndUpdateProfile(this.selectedFile()!, updateData).subscribe({
         next: (response: AdminProfileResponse) => {
           console.log('Profile updated with picture:', response);
           this.profileData.name = response.name;
@@ -169,14 +169,14 @@ export class ProfileManagementComponent implements OnInit {
           this.profileData.profile_pic = response.profile_pic || null;
           this.profileData.profile_pic_url = this.getProfilePicUrl();
           this.isSaving.set(false);
-          this.selectedFile = null;
-          this.previewUrl = null;
+          this.selectedFile.set(null);
+          this.previewUrl.set(null);
           this.profileData.password = '';
         },
         error: (error) => {
           console.error('Error updating profile with picture:', error);
           this.isSaving.set(false);
-        }
+        },
       });
     } else {
       // Just update profile without uploading a new picture
@@ -194,7 +194,7 @@ export class ProfileManagementComponent implements OnInit {
         error: (error) => {
           console.error('Error updating profile:', error);
           this.isSaving.set(false);
-        }
+        },
       });
     }
   }

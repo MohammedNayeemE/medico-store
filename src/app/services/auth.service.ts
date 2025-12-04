@@ -9,6 +9,7 @@ export interface User {
   isAuthenticated: boolean;
   email?: string;
   name?: string;
+  phone?: string;
   roles?: UserRole[];
   user_id?: number;
   session_id?: number;
@@ -137,6 +138,58 @@ export class AuthService {
     );
   }
 
+  /**
+   * Logout the current user - works for both admin and customer
+   * Revokes both access and refresh tokens, and terminates the session
+   * 
+   * Returns:
+   *   Observable<{ msg: string }> - Success message
+   * 
+   * Note:
+   *   - The refresh token is automatically managed via HttpOnly cookies
+   *   - Both access and refresh tokens are revoked on the backend
+   *   - Session is terminated and cannot be reused
+   */
+  logout(): Observable<{ msg: string }> {
+    return this.http.post<{ msg: string }>(`${this.API_BASE}/logout`, {}, { withCredentials: true }).pipe(
+      tap(() => {
+        // Clear local state after successful logout
+        this.clearAuthState();
+      })
+    );
+  }
+
+  /**
+   * Logout from all devices - revokes all active sessions
+   * This will logout the user from all devices where they're logged in
+   * 
+   * Returns:
+   *   Observable<{ msg: string }> - Success message
+   * 
+   * Note:
+   *   - Revokes all refresh tokens for all devices
+   *   - More secure than regular logout for security concerns
+   *   - User will need to login again on all devices
+   */
+  logoutAll(): Observable<{ msg: string }> {
+    return this.http.post<{ msg: string }>(`${this.API_BASE}/logout-all`, {}, { withCredentials: true }).pipe(
+      tap(() => {
+        // Clear local state after successful logout from all devices
+        this.clearAuthState();
+      })
+    );
+  }
+
+  /**
+   * Clear authentication state locally
+   * Called after successful logout from backend
+   */
+  private clearAuthState(): void {
+    localStorage.removeItem('User');
+    this.userSignal.set(null);
+    this.accessTokenSignal.set(null);
+  }
+
   // Customer OTP login - Get OTP
   getOtp(phoneNumber: string): Observable<any> {
     return this.http.post(`${this.API_BASE}/get-otp`, { phone_number: phoneNumber });
@@ -153,6 +206,7 @@ export class AuthService {
         // Backend sets HttpOnly cookies for refresh token
         const user: User = {
           isAuthenticated: true,
+          phone: phoneNumber,
           roles: ['customer'],
           user_id: res?.user_id,
           session_id: res?.session_id,
@@ -167,9 +221,14 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+  /**
+   * Clear authentication state without calling backend
+   * Used internally when logout API call fails
+   */
+  logoutLocally(): void {
     localStorage.removeItem('User');
     this.userSignal.set(null);
+    this.accessTokenSignal.set(null);
   }
 
   getUser(): User | null {

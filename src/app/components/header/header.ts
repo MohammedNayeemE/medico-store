@@ -1,9 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, signal, computed, Signal } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, signal, computed, Signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { ProductService, Product } from '../../services/product.service';
+import { ToastService } from '../../services/toast.service';
+import { CustomerProfileService } from '../../services/customer-profile.service';
 
 @Component({
   selector: 'app-header',
@@ -23,6 +25,10 @@ export class HeaderComponent implements OnInit {
   
   // Profile sidebar state
   isProfileSidebarOpen = signal<boolean>(false);
+  isLoggingOut = signal<boolean>(false);
+  
+  private toastService = inject(ToastService);
+  private profileService = inject(CustomerProfileService);
   
   categories = [
     'Pain Relief',
@@ -60,13 +66,35 @@ export class HeaderComponent implements OnInit {
     return this.cartService.isCartAvailable();
   }
 
+  /**
+   * Load delivery address from API
+   * Fetches the first address from the customer's saved addresses
+   */
   loadDeliveryAddress(): void {
-    try {
-      const addresses = JSON.parse(localStorage.getItem('deliveryAddresses') || '[]');
-      this.deliveryAddress.set(addresses[0]?.addressLine1 || 'Select Location');
-    } catch {
+    // Only load if user is authenticated and is a customer
+    if (!this.isAuthenticated() || !this.isCustomer()) {
       this.deliveryAddress.set('Select Location');
+      return;
     }
+
+    this.profileService.getCustomerAddresses().subscribe({
+      next: (addresses) => {
+        if (addresses && addresses.length > 0) {
+          const firstAddress = addresses[0];
+          // Format: "City - Pincode" (e.g., "Mumbai - 400001")
+          const formattedAddress = firstAddress.city && firstAddress.pincode
+            ? `${firstAddress.city} - ${firstAddress.pincode}`
+            : firstAddress.city || firstAddress.pincode || 'Select Location';
+          this.deliveryAddress.set(formattedAddress);
+        } else {
+          this.deliveryAddress.set('Select Location');
+        }
+      },
+      error: (error) => {
+        console.error('Error loading delivery address:', error);
+        this.deliveryAddress.set('Select Location');
+      }
+    });
   }
 
   onQuickOrder(): void {
@@ -170,10 +198,28 @@ export class HeaderComponent implements OnInit {
 
   /**
    * Logout the current user
+   * Calls the backend logout endpoint to revoke tokens and terminate session
+   * Falls back to local logout if API fails to ensure user is logged out locally
    */
   onLogout(): void {
     this.closeProfileSidebar();
-    this.authService.logout();
-    this.router.navigate(['/']);
+    this.isLoggingOut.set(true);
+
+    this.authService.logout().subscribe({
+      next: (response) => {
+        this.toastService.show('Logged out successfully');
+        this.isLoggingOut.set(false);
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Logout error:', err);
+        // Even if API call fails, clear local auth state for security
+        this.authService.logoutLocally();
+        this.toastService.show('Logged out successfully');
+        this.isLoggingOut.set(false);
+        this.router.navigate(['/']);
+      }
+    });
   }
+
 }

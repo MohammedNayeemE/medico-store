@@ -1,0 +1,76 @@
+<div class="not-found-container">
+  <!-- Animated Background -->
+  <div class="background-animation">
+    <div class="pill pill-1"></div>
+    <div class="pill pill-2"></div>
+    <div class="pill pill-3"></div>
+    <div class="pill pill-4"></div>
+    <div class="stethoscope-icon">
+      <i class="fas fa-stethoscope"></i>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- 404 Number -->
+    <div class="error-number">
+      <span class="number">4</span>
+      <span class="number middle">
+        <i class="fas fa-capsules"></i>
+      </span>
+      <span class="number">4</span>
+    </div>
+
+    <!-- Error Message -->
+    <h1 class="error-title">Oops! Page Not Found</h1>
+    <p class="error-description">
+      The page you're looking for seems to have been prescribed to the wrong address. 
+      Don't worry, we'll help you find your way back to health!
+    </p>
+
+    <!-- Helpful Suggestions -->
+    <div class="suggestions">
+      <div class="suggestion-card">
+        <i class="fas fa-home"></i>
+        <p>Visit our homepage</p>
+      </div>
+      <div class="suggestion-card">
+        <i class="fas fa-pills"></i>
+        <p>Browse products</p>
+      </div>
+      <div class="suggestion-card">
+        <i class="fas fa-stethoscope"></i>
+        <p>Check symptoms</p>
+      </div>
+      <div class="suggestion-card">
+        <i class="fas fa-phone"></i>
+        <p>Contact support</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button (click)="goBack()" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Go Back
+      </button>
+      <button (click)="goHome()" class="btn btn-primary">
+        <i class="fas fa-home"></i>
+        Go to Homepage
+      </button>
+    </div>
+
+    <!-- Auto Redirect Counter -->
+    <div class="auto-redirect">
+      <i class="fas fa-clock"></i>
+      Redirecting to homepage in <span class="countdown">{{ countdown }}</span> seconds...
+    </div>
+  </div>
+
+  <!-- Decorative Pills -->
+  <div class="floating-pills">
+    <div class="floating-pill" *ngFor="let i of [1,2,3,4,5,6,7,8]" [style.animation-delay.s]="i * 0.5">
+      💊
+    </div>
+  </div>
+</div>

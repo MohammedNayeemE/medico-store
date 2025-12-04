@@ -111,8 +111,9 @@ export const routes: Routes = [
       }
     ]
   },
+  // 404 Not Found - Must be last route
   {
     path: '**',
-    redirectTo: ''
+    loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFoundComponent)
   }
 ];
