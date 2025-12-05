@@ -11,6 +11,7 @@ import { AdminSidebarComponent } from '../components/admin-sidebar/admin-sidebar
 })
 export class AdminLayoutComponent {
   isSidebarOpen = false;
+  isSidebarCollapsed = false;
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
@@ -18,5 +19,9 @@ export class AdminLayoutComponent {
 
   closeSidebar() {
     this.isSidebarOpen = false;
+  }
+
+  toggleSidebarCollapse() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 }

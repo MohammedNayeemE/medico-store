@@ -1,8 +1,10 @@
 <div class="flex relative">
   <!-- Sidebar -->
   <app-admin-sidebar 
-    [isOpen]="isSidebarOpen" 
-    (closeSidebar)="closeSidebar()">
+    [isOpen]="isSidebarOpen"
+    [isCollapsed]="isSidebarCollapsed"
+    (closeSidebar)="closeSidebar()"
+    (toggleCollapse)="toggleSidebarCollapse()">
   </app-admin-sidebar>
 
   <!-- Overlay for mobile -->

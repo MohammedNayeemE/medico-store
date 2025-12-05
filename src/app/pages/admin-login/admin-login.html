@@ -65,13 +65,39 @@
   </div>
   <div class="relative z-10 bg-white rounded-3xl shadow-lg w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
     <!-- Left Column (Brand / Illustration) -->
-    <div class="bg-custom-green flex flex-col items-center justify-center p-6 sm:p-10 text-white">
-      <img src="../../../assets/favicons/logo.svg" alt="logo" class="w-20 sm:w-28 mb-6">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-3">Welcome Back, Admin!</h2>
-      <p class="text-sm sm:text-base text-gray-100 text-center">
-        Login securely to manage your store, view reports, and control everything in one place.
-      </p>
+    <div class="flex-1 relative bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center overflow-hidden min-h-[250px] md:min-h-auto">
+      <div class="absolute inset-0 bg-cover bg-center opacity-80"
+        style="background-image: url('https://images.unsplash.com/photo-1581091870622-1eea1c1a6f58?auto=format&fit=crop&w=2070&q=80');">
+      </div>
+      <div class="relative z-10 text-center text-white p-6 sm:p-8 md:p-10">
+        <div class="mb-6">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+            <i class="fa-solid fa-user-shield text-3xl sm:text-4xl"></i>
+          </div>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Admin Control Center</h2>
+        <p class="text-base sm:text-lg md:text-xl opacity-90 drop-shadow leading-relaxed">
+          Manage products, monitor orders, and ensure seamless operations — empowering your business from the core.
+        </p>
+
+        <div class="mt-6 sm:mt-8 flex flex-wrap justify-center gap-4 text-xs sm:text-sm opacity-90">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-database"></i>
+            <span>Inventory Management</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <span>Order Monitoring</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>User Roles & Access</span>
+          </div>
+        </div>
+      </div>
     </div>
+
     <!-- Right Column (Login Form) -->
     <div class="p-6 sm:p-10 flex flex-col justify-center">
       <h2 class="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-2">
@@ -104,7 +130,10 @@
                 placeholder="Enter your password" />
 
           <button type="button" (click)="togglePassword()" class="absolute right-3 top-10 text-gray-500 hover:text-gray-700 text-sm">
-            <img src="../../../assets/favicons/eyeclose.svg" alt="eye" id="eyeIcon">  
+            <img 
+              [src]="hidePassword() ? 'assets/eyeclose.svg' : 'assets/eyeopen.svg'"
+              [alt]="hidePassword() ? 'Hide password' : 'Show password'"
+            />
           </button>
           <p *ngIf="password?.touched && password?.invalid && password?.errors?.['required']" class="text-red-500 text-xs mt-1">Password is required.</p>
           <p *ngIf="password?.touched && password?.invalid && password?.errors?.['minlength']" class="text-red-500 text-xs mt-1">Password must be at least 6 characters.</p>

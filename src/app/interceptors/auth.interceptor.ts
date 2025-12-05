@@ -37,7 +37,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return throwError(() => error);
       }
 
-      if (req.url.includes('/auth/admin-login')) {
+      if (req.url.includes('/auth/admin/login')) {
         return throwError(() => error);
       }
 

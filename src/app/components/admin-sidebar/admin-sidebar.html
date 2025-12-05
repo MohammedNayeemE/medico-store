@@ -1,68 +1,104 @@
 <section 
   id="sidebar" 
   [class.translate-x-0]="isOpen"
-  class="fixed md:sticky overflow-y-auto top-0 left-0 h-screen w-72 sidebar-gradient text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50">
+  [class.w-72]="!isCollapsed"
+  [class.w-20]="isCollapsed"
+  class="fixed md:sticky overflow-y-auto top-0 left-0 h-screen bg-white shadow-xl border-r-2 border-light/20 transform -translate-x-full md:translate-x-0 transition-all duration-300 z-50">
   
   <!-- Background Effects -->
-  <div class="absolute top-0 left-0 w-full h-full opacity-10">
+  <div class="absolute top-0 left-0 w-full h-full opacity-5">
     <div class="absolute top-20 left-8 w-32 h-32 bg-primary rounded-full blur-3xl animate-pulse-slow"></div>
-    <div class="absolute bottom-40 right-8 w-24 h-24 bg-accent rounded-full blur-2xl animate-float"></div>
+    <div class="absolute bottom-40 right-8 w-24 h-24 bg-light rounded-full blur-2xl animate-float"></div>
   </div>
 
+  <!-- Collapse Toggle Button (Desktop only)
+  <button
+    (click)="onToggleCollapse()"
+    class="hidden md:block absolute -right-3 top-6 w-16 h-6 bg-gradient-to-br from-primary to-light rounded-full shadow-lg z-50 hover:scale-110 transition-transform duration-200"
+    [title]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+    <i 
+      [class.fa-chevron-right]="isCollapsed"
+      [class.fa-chevron-left]="!isCollapsed"
+      class="fas text-primary text-xs"></i>
+  </button> -->
+
   <!-- Logo -->
-  <div class="relative p-6 border-b border-gray-600/50">
-    <div class="flex items-center space-x-3">
-      <div class="w-12 h-12 bg-gradient-to-r from-primary to-light rounded-xl flex items-center justify-center glow animate-float">
-        <i class="fas fa-cube text-white text-lg"></i>
-      </div>
-      <div>
-        <span class="text-xl font-bold">Admin Panel</span>
-        <p class="text-white text-sm">E-Pharmacy Management</p>
-      </div>
+  <div (click)="onToggleCollapse()" class="relative cursor-pointer p-6 border-b border-light/20 bg-gradient-to-r from-primary/5 to-light/5" [class.px-3]="isCollapsed">
+    <div class="flex items-center" [class.justify-center]="isCollapsed" [class.space-x-3]="!isCollapsed">
+      <img src="assets/medico-store.svg" alt="Medico Store Logo" class="w-12 h-12 flex-shrink-0" />
+      @if (!isCollapsed) {
+        <div>
+          <span class="text-xl font-bold text-gray-800">Admin Panel</span>
+          <p class="text-gray-600 text-sm">E-Pharmacy Management</p>
+        </div>
+      }
     </div>
   </div>
 
   <!-- Admin Profile -->
-  <div class="relative p-6 border-b border-gray-600/50">
-    <div class="flex items-center space-x-4">
-      <div class="w-12 h-12 bg-gradient-to-r from-success to-accent rounded-full flex items-center justify-center ring-2 ring-accent/20">
-        <i class="fas fa-user text-white"></i>
+  <div class="relative p-6 border-b border-light/20 bg-gradient-to-r from-primary/5 to-transparent" [class.px-3]="isCollapsed">
+    <div class="flex items-center" [class.justify-center]="isCollapsed" [class.space-x-4]="!isCollapsed">
+      <div class="w-12 h-12 bg-gradient-to-br from-primary to-light rounded-full flex items-center justify-center ring-2 ring-light/30 shadow-md flex-shrink-0">
+        <i class="fas fa-user text-primary"></i>
       </div>
-      <div>
-        <span class="font-semibold text-lg">Administrator</span>
-        <p class="text-accent text-sm flex items-center">
-          <span class="w-2 h-2 bg-accent rounded-full mr-2 animate-pulse"></span>
-          Online
-        </p>
-      </div>
+      @if (!isCollapsed) {
+        <div>
+          <span class="font-semibold text-lg text-gray-800">{{ adminName() }}</span>
+          <p class="text-green-400 text-sm flex items-center font-medium">
+            <span class="text-green-400 w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+            Online
+          </p>
+        </div>
+      }
     </div>
   </div>
 
   <!-- Navigation -->
-  <nav class="mt-6 px-4 relative z-10">
+  <nav class="mt-6 px-4 relative z-10" [class.px-2]="isCollapsed">
     <div class="space-y-2">
       @for (item of navItems; track item.id) {
-        <div class="nav-item">
+        <div class="nav-item" [title]="isCollapsed ? item.label : ''">
           <div 
             (click)="navigateTo(item.route)"
-            [class.bg-primary]="item.active"
-            [class.shadow-lg]="item.active"
-            class="flex items-center space-x-4 text-white hover:text-white px-4 py-3 rounded-xl hover:bg-white/10 cursor-pointer group">
-            <i [class]="'fas ' + item.icon + ' text-lg'"></i>
-            <span class="font-medium">{{ item.label }}</span>
+            [class.bg-gradient-to-r]="item.active"
+            [class.from-primary]="item.active"
+            [class.to-light]="item.active"
+            [class.text-green-600]="item.active"
+            [class.shadow-md]="item.active"
+            [class.text-gray-700]="!item.active"
+            [class.hover:bg-primary/10]="!item.active"
+            [class.justify-center]="isCollapsed"
+            [class.px-4]="!isCollapsed"
+            [class.px-3]="isCollapsed"
+            class="flex items-center py-3 rounded-xl cursor-pointer group transition-all duration-200"
+            [class.space-x-4]="!isCollapsed">
+            <i [class]="'fas ' + item.icon + ' text-lg'" 
+               [class.text-primary]="item.active"
+               [class.text-primary]="!item.active"></i>
+            @if (!isCollapsed) {
+              <span class="font-medium">{{ item.label }}</span>
+            }
           </div>
         </div>
       }
     </div>
 
     <!-- Logout -->
-    <div class="mt-2 pt-6 border-t border-gray-600/50">
+    <div class="mt-2 pt-6 border-t border-light/20">
       <div 
         (click)="logout()"
-        class="nav-item bg-[linear-gradient(135deg,#b91c1c_0%,#dc2626_100%)] rounded-xl">
-        <div class="flex items-center space-x-4 text-white-400 hover:text-white-300 px-4 py-3 cursor-pointer group">
+        [title]="isCollapsed ? 'Logout' : ''"
+        class="nav-item bg-gradient-to-r from-red-600 to-red-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
+        <div 
+          class="flex items-center text-white py-3 cursor-pointer group"
+          [class.justify-center]="isCollapsed"
+          [class.px-4]="!isCollapsed"
+          [class.px-3]="isCollapsed"
+          [class.space-x-4]="!isCollapsed">
           <i class="fas fa-arrow-right-from-bracket text-lg"></i>
-          <span class="font-medium">Logout</span>
+          @if (!isCollapsed) {
+            <span class="font-medium">Logout</span>
+          }
         </div>
       </div>
     </div>

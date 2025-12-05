@@ -1,4 +1,110 @@
 /* Admin Sidebar specific styles */
 @import '../../../styles/admin-shared.css';
 
-/* Additional component-specific overrides can go here */
+/* Sidebar width transitions */
+#sidebar {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sidebar scrollbar customization */
+#sidebar::-webkit-scrollbar {
+  width: 2px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: rgba(98, 222, 64, 0.1);
+  border-radius: 10px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(98, 222, 64, 0.5) 0%, rgba(94, 232, 56, 0.5) 100%);
+  border-radius: 10px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(98, 222, 64, 0.8) 0%, rgba(94, 232, 56, 0.8) 100%);
+}
+
+/* Enhanced nav item hover effect */
+.nav-item {
+  position: relative;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 0;
+  background: linear-gradient(180deg, #62DE40 0%, #5EE838 100%);
+  border-radius: 0 4px 4px 0;
+  transition: height 0.3s ease;
+}
+
+.nav-item:hover::before {
+  height: 70%;
+}
+
+/* Active nav item indicator - only show when not collapsed */
+#sidebar:not(.w-20) .nav-item .bg-gradient-to-r::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, #62DE40 0%, #5EE838 100%);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Collapsed state - show indicator differently */
+#sidebar.w-20 .nav-item .bg-gradient-to-r {
+  position: relative;
+}
+
+#sidebar.w-20 .nav-item .bg-gradient-to-r::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background: linear-gradient(90deg, #62DE40 0%, #5EE838 100%);
+  border-radius: 4px 4px 0 0;
+}
+
+/* Logo animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Collapse toggle button animation */
+button i {
+  transition: transform 0.3s ease;
+}
+
+button:hover i {
+  transform: scale(1.2);
+}
+
+/* Tooltip effect for collapsed items */
+#sidebar.w-20 .nav-item {
+  position: relative;
+}
+
+/* Smooth text fade in/out */
+.nav-item span {
+  transition: opacity 0.2s ease;
+}
+
