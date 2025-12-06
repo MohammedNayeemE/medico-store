@@ -11,10 +11,10 @@
         <div class="item-meta">
           <span class="item-name">{{ item.name }}</span>
           <div class="item-controls">
-            <button class="qty-btn" (click)="decreaseQuantity(item.name)">-</button>
+            <button class="qty-btn" (click)="decreaseQuantity(item.medicine_id)">-</button>
             <span class="qty-value">{{ item.quantity }}</span>
-            <button class="qty-btn" (click)="increaseQuantity(item.name)">+</button>
-            <button class="remove-btn" (click)="removeItem(item.name)">X</button>
+            <button class="qty-btn" (click)="increaseQuantity(item.medicine_id)">+</button>
+            <button class="remove-btn" (click)="removeItem(item.medicine_id)">X</button>
           </div>
         </div>
       </div>

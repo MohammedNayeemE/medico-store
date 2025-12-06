@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 
 interface SuggestedMedicine {
-  id: string;
+  medicine_id: number;
   name: string;
   price: number;
   priceStr: string;
@@ -42,7 +42,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
   private demoMedicines: { [key: string]: SuggestedMedicine[] } = {
     headache: [
       {
-        id: 'aspirin1',
+        medicine_id: 1,
         name: 'Aspirin 500mg',
         price: 45,
         priceStr: '₹45',
@@ -52,7 +52,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Tablet'
       },
       {
-        id: 'paracetamol1',
+        medicine_id: 2,
         name: 'Paracetamol (Crocin) 500mg',
         price: 55,
         priceStr: '₹55',
@@ -62,7 +62,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Tablet'
       },
       {
-        id: 'ibuprofen1',
+        medicine_id: 3,
         name: 'Ibuprofen 400mg',
         price: 65,
         priceStr: '₹65',
@@ -74,7 +74,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
     ],
     cold: [
       {
-        id: 'coldrelief1',
+        medicine_id: 4,
         name: 'Strepsils Lemon',
         price: 35,
         priceStr: '₹35',
@@ -83,7 +83,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Lozenge'
       },
       {
-        id: 'coughsyrup1',
+        medicine_id: 5,
         name: 'Cough Syrup (Benadryl)',
         price: 85,
         priceStr: '₹85',
@@ -93,7 +93,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Syrup'
       },
       {
-        id: 'vitamin1',
+        medicine_id: 6,
         name: 'Vitamin C 500mg',
         price: 95,
         priceStr: '₹95',
@@ -105,7 +105,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
     ],
     fever: [
       {
-        id: 'fevercool1',
+        medicine_id: 7,
         name: 'Thermocol Fever Strip',
         price: 25,
         priceStr: '₹25',
@@ -114,7 +114,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Strip'
       },
       {
-        id: 'paracetamol2',
+        medicine_id: 3,
         name: 'Paracetamol (Dolo) 650mg',
         price: 65,
         priceStr: '₹65',
@@ -124,7 +124,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Tablet'
       },
       {
-        id: 'electrolyte1',
+        medicine_id: 8,
         name: 'Electrolyte Drink Mix',
         price: 75,
         priceStr: '₹75',
@@ -135,7 +135,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
     ],
     stomach: [
       {
-        id: 'antacid1',
+        medicine_id: 9,
         name: 'Antacid Gel (Digene)',
         price: 55,
         priceStr: '₹55',
@@ -144,7 +144,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Gel'
       },
       {
-        id: 'omeprazole1',
+        medicine_id: 10,
         name: 'Omeprazole 20mg',
         price: 95,
         priceStr: '₹95',
@@ -154,7 +154,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Tablet'
       },
       {
-        id: 'probiotics1',
+        medicine_id: 11,
         name: 'Probiotics (Align)',
         price: 250,
         priceStr: '₹250',
@@ -165,7 +165,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
     ],
     default: [
       {
-        id: 'multivitamin1',
+        medicine_id: 1,
         name: 'Multivitamin Tablets',
         price: 180,
         priceStr: '₹180',
@@ -174,7 +174,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
         type: 'Tablet'
       },
       {
-        id: 'vitamin1',
+        medicine_id: 2,
         name: 'Vitamin D3 1000IU',
         price: 120,
         priceStr: '₹120',
@@ -214,8 +214,8 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
   }
 
   loadCartItems(): void {
-    const cart = this.cartService.getCart();
-    this.cartItems.set(new Set(cart.map(item => item.name)));
+    const cart = this.cartService.cart();
+    this.cartItems.set(new Set(cart.map((item: any) => item.name)));
   }
 
   sendMessage(): void {
@@ -280,6 +280,7 @@ export class SymptomCheckerComponent implements OnInit, AfterViewChecked {
 
   addToCart(medicine: SuggestedMedicine): void {
     this.cartService.addToCart({
+      medicine_id: medicine.medicine_id,
       name: medicine.name,
       price: medicine.price,
       priceStr: medicine.priceStr,

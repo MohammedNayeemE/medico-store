@@ -26,15 +26,15 @@ export class CartSidebarComponent {
     this.closeSidebar.emit();
   }
 
-  increaseQuantity(name: string) {
-    this.cartService.increaseQuantity(name);
+  increaseQuantity(medicineId: number) {
+    this.cartService.increaseQuantity(medicineId);
   }
 
-  decreaseQuantity(name: string) {
-    this.cartService.decreaseQuantity(name);
+  decreaseQuantity(medicineId: number) {
+    this.cartService.decreaseQuantity(medicineId);
   }
 
-  removeItem(name: string) {
-    this.cartService.removeItem(name);
+  removeItem(medicineId: number) {
+    this.cartService.removeItem(medicineId);
   }
 }
